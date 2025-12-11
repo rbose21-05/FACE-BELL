@@ -1,96 +1,138 @@
-# 📸 FACE_BELL
+# FACE-BELL 🔔
 
-A **Smart Doorbell System** built with **Flask (Python backend)** and **React (Frontend)**.  
-It captures visitor faces, stores them, and displays a **secure visitor log** with access control.  
+A face recognition doorbell system using React and Flask with DeepFace AI.
 
----
+## Features
 
-## 🚀 Features
-- 🎥 **Face Capture** using webcam  
-- 🖼️ Stores visitor images in `faces/` folder  
-- 🗂️ Maintains visitor history in `visitor_log.csv`  
-- 🔒 Access-controlled **Visitor Log** page  
-- ⚡ Fast frontend built with **React + Vite**  
+- Real-time face recognition using webcam
+- Add new faces to the database
+- Visitor logging system
+- Audio alerts for recognized/unrecognized faces
 
----
+## Prerequisites
 
-## ⚙️ Setup Instructions
+- Python 3.9+
+- Node.js 16+
+- npm or yarn
+- Webcam access
 
-### 🔹 1. Clone the Repository
+## Setup Instructions
+
+### 1. Clone the Repository
 ```bash
-git clone https://github.com/rbose21-05/FACE_BELL.git
-cd FACE_BELL
-🔹 2. Start the Backend (Flask + Python)
-bash
-Copy
-Edit
+git clone https://github.com/rbose21-05/FACE-BELL.git
+cd FACE-BELL
+```
+
+### 2. Backend Setup
+```bash
 cd backend
-python -m venv venv
-▶️ Activate Virtual Environment
-Windows
 
-bash
-Copy
-Edit
-venv\Scripts\activate
-Mac/Linux
+# Install Python dependencies
+pip3 install -r requirements.txt
 
-bash
-Copy
-Edit
-source venv/bin/activate
-📦 Install Dependencies
-bash
-Copy
-Edit
-pip install -r requirements.txt
-▶️ Run Backend
-bash
-Copy
-Edit
-python app.py
-✅ Flask will run at: http://127.0.0.1:5000/
+# Create faces directory (if it doesn't exist)
+mkdir -p faces
 
-🔹 3. Start the Frontend (React + Vite)
-(Open a new terminal, keep backend running)
+# Start the Flask server
+python3 app.py
+```
 
-bash
-Copy
-Edit
+The backend will run on `http://127.0.0.1:5000`
+
+### 3. Frontend Setup
+
+Open a new terminal window:
+```bash
 cd frontend/my-project
+
+# Install dependencies
 npm install
+
+# Start the development server
 npm run dev
-✅ React will run at: http://localhost:5173/
+```
 
-🖥️ Usage
-Open frontend in browser.
+The frontend will run on `http://localhost:5173`
 
-Capture a visitor face → Sent to Flask backend.
+### 4. macOS Users: Disable AirPlay Receiver
 
-Backend saves face in faces/ folder & logs details in visitor_log.csv.
+If you get a "Port 5000 is in use" error:
 
-View visitor history in Visitor Log page.
+1. Open **System Settings**
+2. Go to **General** → **AirDrop & Handoff**
+3. Turn OFF **AirPlay Receiver**
 
-📂 Project Structure
-bash
-Copy
-Edit
-FACE_BELL/
-│── backend/
-│   ├── app.py
-│   ├── faces/             # Saved visitor face images
-│   ├── visitor_log.csv    # Visitor logs
-│   └── requirements.txt
-│
-│── frontend/my-project/
-│   ├── src/
-│   │   ├── App.jsx
-│   │   ├── VisitorLog.jsx
-│   │   ├── index.css
-│   │   └── main.jsx
-│   ├── vite.config.js
-│   └── package.json
-│
+## Usage
+
+1. Open `http://localhost:5173` in your browser
+2. Allow webcam access when prompted
+3. Click **"📸 Capture Face"** to recognize a face
+4. If face is not recognized, you can add it to the database
+5. Click **"📄 View Visitor Log"** to see visitor history
+
+## Project Structure
+```
+FACE-BELL/
+├── backend/
+│   ├── app.py              # Flask API server
+│   ├── requirements.txt    # Python dependencies
+│   ├── faces/             # Face database directory
+│   └── visitor_log.csv    # Visitor log file
+├── frontend/
+│   └── my-project/
+│       ├── src/
+│       │   ├── App.jsx           # Main React component
+│       │   ├── VisitorLog.jsx    # Visitor log component
+│       │   └── main.jsx
+│       ├── public/
+│       │   ├── bell.mp3          # Recognition sound
+│       │   └── alarm.mp3         # Alert sound
+│       ├── vite.config.js        # Vite proxy configuration
+│       └── package.json
 └── README.md
-🤝 Contributing
-Pull requests are welcome! For major changes, please open an issue first to discuss.
+```
+
+## Technologies Used
+
+### Backend
+- Flask - Web framework
+- DeepFace - Face recognition AI
+- OpenCV - Image processing
+- Flask-CORS - Cross-origin resource sharing
+
+### Frontend
+- React - UI framework
+- Vite - Build tool and dev server
+- Axios - HTTP client
+- Framer Motion - Animations
+- React Webcam - Camera access
+
+## API Endpoints
+
+- `POST /recognize` - Recognize a face from base64 image
+- `POST /add_face` - Add a new face to the database
+- `POST /log` - Get visitor log (requires key: "211005")
+- `POST /clear_log` - Clear the visitor log
+
+## Troubleshooting
+
+### CORS Issues
+This project uses Vite's proxy feature to avoid CORS issues in development. The proxy is configured in `vite.config.js` to forward `/api/*` requests to the Flask backend.
+
+### Face Recognition Not Working
+- Ensure the `faces` folder exists in the backend directory
+- Make sure there's adequate lighting for the webcam
+- Check that DeepFace dependencies are properly installed
+
+### Port Conflicts
+- Backend uses port 5000 (may conflict with macOS AirPlay)
+- Frontend uses port 5173 (Vite default)
+
+## License
+
+MIT
+
+## Contributors
+
+- Rupsa Bose (rbose21-05)
