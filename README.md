@@ -129,9 +129,7 @@ This project uses Vite's proxy feature to avoid CORS issues in development. The 
 - Backend uses port 5000 (may conflict with macOS AirPlay)
 - Frontend uses port 5173 (Vite default)
 
-## License
 
-MIT
 
 ## Contributors
 
