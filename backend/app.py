@@ -8,14 +8,28 @@ import base64
 import numpy as np
 
 app = Flask(__name__)
-CORS(app)
 
-@app.after_request
-def after_request(response):
-    response.headers.add("Access-Control-Allow-Origin", "*")
+# Complete CORS configuration
+CORS(app, resources={
+    r"/*": {
+        "origins": ["http://localhost:5173", "http://127.0.0.1:5173"],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
+    }
+})
+
+# Handle OPTIONS preflight requests explicitly
+@app.route("/recognize", methods=["OPTIONS"])
+@app.route("/add_face", methods=["OPTIONS"])
+@app.route("/log", methods=["OPTIONS"])
+@app.route("/clear_log", methods=["OPTIONS"])
+def handle_options():
+    response = jsonify({"status": "ok"})
+    response.headers.add("Access-Control-Allow-Origin", "http://localhost:5173")
     response.headers.add("Access-Control-Allow-Headers", "Content-Type")
     response.headers.add("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
-    return response
+    return response, 200
 
 def log_visitor(name):
     with open("visitor_log.csv", "a") as file:
@@ -59,7 +73,7 @@ def recognize_from_image():
         try:
             result = DeepFace.find(
                 img_path=temp_path,
-                db_path="C:\\Users\\Rupsa\\Desktop\\doorbell\\backend\\faces",
+                db_path="faces",
                 model_name="ArcFace",
                 detector_backend="retinaface",
                 enforce_detection=False
@@ -126,4 +140,4 @@ def get_log():
         return jsonify({"error": "Access denied"}), 403
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=5000)

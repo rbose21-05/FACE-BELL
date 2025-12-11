@@ -25,9 +25,7 @@ function Home() {
             return;
         }
         try {
-            const res = await axios.post("http://localhost:5000/recognize", {
-                image: imageSrc,
-            });
+            const res = await axios.post("/api/recognize", { image: imageSrc });
             if (res.data.match) {
                 setResult(` Hello ${res.data.name}!`);
                 setShowAddPrompt(false);
@@ -75,8 +73,6 @@ function Home() {
                     color: "white",
                     boxShadow: "0 8px 24px rgba(0, 0, 0, 0.25)",
                     textAlign: "center",
-                    backdropFilter: "blur(10px)", // Optional: keep frosted feel
-                    WebkitBackdropFilter: "blur(10px)",
                 }}
             >
                 <h1
@@ -137,29 +133,29 @@ function Home() {
                     whileTap={{ scale: 0.95 }}
                     onClick={handleClick}
                     style={{
-                            marginTop: "30px",
-                            padding: "12px 24px",
-                            fontSize: "16px",
-                            fontWeight: "600",
-                            borderRadius: "10px",
-                            border: "none",
-                            background: "linear-gradient(135deg, #4CAF50, #2E7D32)",
-                            color: "white",
-                            cursor: "pointer",
-                            boxShadow: "0px 4px 8px rgba(0,0,0,0.2)",
-                            transition: "all 0.3s ease",
-                        }}
-                        onMouseOver={(e) =>
-                            (e.currentTarget.style.background =
-                                "linear-gradient(135deg, #66BB6A, #388E3C)")
-                        }
-                        onMouseOut={(e) =>
-                            (e.currentTarget.style.background =
-                                "linear-gradient(135deg, #4CAF50, #2E7D32)")
-                        }
-                    >
-                        📸 Capture Face
-                    </motion.button>
+                        marginTop: "30px",
+                        padding: "12px 24px",
+                        fontSize: "16px",
+                        fontWeight: "600",
+                        borderRadius: "10px",
+                        border: "none",
+                        background: "linear-gradient(135deg, #4CAF50, #2E7D32)",
+                        color: "white",
+                        cursor: "pointer",
+                        boxShadow: "0px 4px 8px rgba(0,0,0,0.2)",
+                        transition: "all 0.3s ease",
+                    }}
+                    onMouseOver={(e) =>
+                        (e.currentTarget.style.background =
+                            "linear-gradient(135deg, #66BB6A, #388E3C)")
+                    }
+                    onMouseOut={(e) =>
+                        (e.currentTarget.style.background =
+                            "linear-gradient(135deg, #4CAF50, #2E7D32)")
+                    }
+                >
+                    📸 Capture Face
+                </motion.button>
 
                 {showAddPrompt && (
                     <div style={{ marginTop: "30px" }}>
@@ -178,40 +174,49 @@ function Home() {
                             }}
                         />
                         <button
-                        onClick={async () => {
-                          if (!nameInput.trim()) return;
+                            onClick={async () => {
+                                if (!nameInput.trim()) return;
 
-                          const imageSrc = webcamRef.current.getScreenshot(); // capture snapshot here
-                          if (!imageSrc) {
-                            alert("⚠ Failed to capture image. Please try again.");
-                            return;
-                          }
+                                const imageSrc =
+                                    webcamRef.current.getScreenshot(); // capture snapshot here
+                                if (!imageSrc) {
+                                    alert(
+                                        "⚠ Failed to capture image. Please try again."
+                                    );
+                                    return;
+                                }
 
-                          try {
-                            const res = await axios.post("http://localhost:5000/add_face", {
-                              name: nameInput.trim(),
-                              image: imageSrc, // 👈 send the base64 image too
-                            });
-                            alert(res.data.message || "Face added!");
-                            setNameInput("");
-                            setShowAddPrompt(false);
-                          } catch (err) {
-                            alert("⚠ " + (err.response?.data?.error || err.message));
-                          }
-                        }}
-                        style={{
-                          padding: "10px 16px",
-                          fontSize: "16px",
-                          backgroundColor: "#673AB7",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "6px",
-                          cursor: "pointer",
-                        }}
-                      >
-                        ➕ Add Face
-                      </button>
-
+                                try {
+                                    const res = await axios.post(
+                                        "/api/add_face",
+                                        {
+                                            name: nameInput.trim(),
+                                            image: imageSrc, // 👈 send the base64 image too
+                                        }
+                                    );
+                                    alert(res.data.message || "Face added!");
+                                    setNameInput("");
+                                    setShowAddPrompt(false);
+                                } catch (err) {
+                                    alert(
+                                        "⚠ " +
+                                            (err.response?.data?.error ||
+                                                err.message)
+                                    );
+                                }
+                            }}
+                            style={{
+                                padding: "10px 16px",
+                                fontSize: "16px",
+                                backgroundColor: "#673AB7",
+                                color: "white",
+                                border: "none",
+                                borderRadius: "6px",
+                                cursor: "pointer",
+                            }}
+                        >
+                            ➕ Add Face
+                        </button>
                     </div>
                 )}
 
@@ -230,32 +235,32 @@ function Home() {
                 )}
 
                 <Link to="/log">
-                  <button
-    style={{
-        marginTop: "30px",
-        padding: "12px 24px",
-        fontSize: "16px",
-        fontWeight: "600",
-        borderRadius: "10px",
-        border: "none",
-        background: "linear-gradient(135deg, #4CAF50, #2E7D32)",
-        color: "white",
-        cursor: "pointer",
-        boxShadow: "0px 4px 8px rgba(0,0,0,0.2)",
-        transition: "all 0.3s ease",
-    }}
-    onMouseOver={(e) =>
-        (e.currentTarget.style.background =
-            "linear-gradient(135deg, #66BB6A, #388E3C)")
-    }
-    onMouseOut={(e) =>
-        (e.currentTarget.style.background =
-            "linear-gradient(135deg, #4CAF50, #2E7D32)")
-    }
->
-    📄 View Visitor Log
-</button>
-
+                    <button
+                        style={{
+                            marginTop: "30px",
+                            padding: "12px 24px",
+                            fontSize: "16px",
+                            fontWeight: "600",
+                            borderRadius: "10px",
+                            border: "none",
+                            background:
+                                "linear-gradient(135deg, #4CAF50, #2E7D32)",
+                            color: "white",
+                            cursor: "pointer",
+                            boxShadow: "0px 4px 8px rgba(0,0,0,0.2)",
+                            transition: "all 0.3s ease",
+                        }}
+                        onMouseOver={(e) =>
+                            (e.currentTarget.style.background =
+                                "linear-gradient(135deg, #66BB6A, #388E3C)")
+                        }
+                        onMouseOut={(e) =>
+                            (e.currentTarget.style.background =
+                                "linear-gradient(135deg, #4CAF50, #2E7D32)")
+                        }
+                    >
+                        📄 View Visitor Log
+                    </button>
                 </Link>
             </div>
         </motion.div>
